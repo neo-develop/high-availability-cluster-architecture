@@ -1,0 +1,11 @@
+upstream ips {
+    server 22.222.22.002;
+    server 33.333.33.003;
+}
+
+server {
+    listen 80;
+    location / {
+        proxy_pass http://ips;
+    }
+}

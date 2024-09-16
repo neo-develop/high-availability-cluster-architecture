@@ -1,0 +1,30 @@
+upstream ips {
+    server 22.222.22.002;
+    server 33.333.33.003;
+}
+
+upstream app1_ips {
+    server 22.222.22.002:8001;
+    server 33.333.33.003:8001;
+}
+
+upstream app2_ips {
+    server 22.222.22.002:8002;
+    server 33.333.33.003:8002;
+}
+
+server {
+    listen 80;
+    
+    location / {
+        proxy_pass http://ips;
+    }
+    
+    location /port1/ {
+        proxy_pass http://app1_ips/;
+    }
+
+    location /port2/ {
+        proxy_pass http://app2_ips/;
+    }
+}

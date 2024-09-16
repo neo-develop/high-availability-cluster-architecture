@@ -1,0 +1,48 @@
+upstream ips {
+    server 111.111.11.111:80;
+    server 22.222.22.222:80;
+}
+
+upstream app1_ips {
+	server 111.111.11.111:8001;
+	server 22.222.22.222:8001;
+}
+
+upstream app2_ips {
+	server 111.111.11.111:8002;
+	server 22.222.22.222:8002;
+}
+
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+
+	root /var/www/html;
+	index index.html index.htm index.nginx-debian.html;
+
+	server_name 127.0.0.1;
+
+	location / {
+         proxy_pass http://ips;
+         proxy_set_header Host $host;
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+         proxy_set_header X-Forwarded-Proto $scheme;
+	}
+
+	location /port1/ {
+	    proxy_pass http://app1_ips/;
+	    proxy_set_header Host $host;
+	    proxy_set_header X-Real-IP $remote_addr;
+	    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	    proxy_set_header X-Forwarded-Proto $scheme;
+	 }
+
+	 location /port2/ {
+	    proxy_pass http://app2_ips/;
+	    proxy_set_header Host $host;
+	    proxy_set_header X-Real-IP $remote_addr;
+	    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	    proxy_set_header X-Forwarded-Proto $scheme;
+	 }
+}
