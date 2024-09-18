@@ -1,0 +1,68 @@
+upstream ips {
+    server 111.111.11.111:80;
+    server 22.222.22.222:80;
+}
+
+upstream backend_8001 {
+	server 111.111.11.111:8001;
+	server 22.222.22.222:8001;
+}
+
+upstream backend_8002 {
+	server 111.111.11.111:8002;
+	server 22.222.22.222:8002;
+}
+
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+
+	root /var/www/html;
+	index index.html index.htm index.nginx-debian.html;
+
+	server_name 127.0.0.1;
+
+	location / {
+         proxy_pass http://ips;
+         proxy_set_header Host $host;
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+         proxy_set_header X-Forwarded-Proto $scheme;
+	}
+}
+
+server {
+	listen 8001 default_server;
+	listen [::]:8001 default_server;
+
+	root /var/www/html;
+	index index.html index.htm index.nginx-debian.html;
+
+	server_name 127.0.0.1;
+
+	location / {
+         proxy_pass http://backend_8001;
+         proxy_set_header Host $host;
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+         proxy_set_header X-Forwarded-Proto $scheme;
+	}
+}
+
+server {
+	listen 8002 default_server;
+	listen [::]:8002 default_server;
+
+	root /var/www/html;
+	index index.html index.htm index.nginx-debian.html;
+
+	server_name 127.0.0.1;
+
+	location / {
+         proxy_pass http://backend_8002;
+         proxy_set_header Host $host;
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+         proxy_set_header X-Forwarded-Proto $scheme;
+	}
+}
