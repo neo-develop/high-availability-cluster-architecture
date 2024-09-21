@@ -1,0 +1,14 @@
+# 使用官方的 Python 运行时作为父镜像
+FROM python:3.9-slim
+
+# 设置工作目录
+WORKDIR /app
+
+# 将当前目录内容复制到容器中的/app
+COPY . .
+
+# 安装requirements.txt的依赖包
+RUN pip install -r requirements.txt
+
+# 运行应用的命令
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]

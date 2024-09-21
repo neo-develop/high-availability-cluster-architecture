@@ -1,0 +1,27 @@
+# 指定 Compose 文件的格式版本
+version: '3'
+
+services:
+  # 定义名为 project1 的服务
+  project1:
+    # 指定构建镜像的位置 和 Dockerfile 的位置
+    build:
+      context: ./project1
+      dockerfile: Dockerfile
+    # 将容器内的端口 8001 映射到主机的端口 8001
+    ports:
+      - "8001:8001"
+    # 如果容器停止或机器重启后，让容器自动重启
+    restart: always
+
+  # 定义名为 project2 的服务
+  project2:
+    # 指定构建镜像的位置 和 Dockerfile 的位置
+    build:
+      context: ./project2
+      dockerfile: Dockerfile
+    # 将容器内的端口 8002 映射到主机的端口 8002
+    ports:
+      - "8002:8002"
+    # 如果容器停止或机器重启后，让容器自动重启
+    restart: always
